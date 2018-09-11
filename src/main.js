@@ -1,5 +1,8 @@
 import Vue from 'vue'
 import App from './App.vue'
+import 'reset.css'
+import 'flex.css'
+import './assets/style/common.scss'
 
 Vue.config.productionTip = false
 
