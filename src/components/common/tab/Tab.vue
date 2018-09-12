@@ -80,7 +80,7 @@ export default {
     }
   }
   .tab-content {
-    margin-top: 12px;
+    margin: 15px 10px 0;
   }
 }
 </style>

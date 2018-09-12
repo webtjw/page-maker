@@ -5,7 +5,7 @@
         123
       </tab-item>
       <tab-item name="template" label="模板选择">
-        456
+        <div class="a-c">暂无模板</div>
       </tab-item>
     </tab>
   </div>
