@@ -1,6 +1,5 @@
 <template>
   <div class="tab-content-item">
-    <slot/>
   </div>
 </template>
 

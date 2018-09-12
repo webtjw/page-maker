@@ -2,10 +2,10 @@
   <div id="template-widget">
     <tab v-model="activeMenu">
       <tab-item name="component" label="控件选择">
-        控件选择
+        123
       </tab-item>
       <tab-item name="template" label="模板选择">
-        模板选择
+        456
       </tab-item>
     </tab>
   </div>
