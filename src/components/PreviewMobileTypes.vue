@@ -20,7 +20,7 @@ export default {
     }
   },
   created () {
-    this.mobileType = this.mobileTypeList[0]
+    this.$emit('changeType', this.mobileType = this.mobileTypeList[0])
   }
 }
 </script>

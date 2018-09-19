@@ -1,18 +1,23 @@
 <template>
   <div id="perview-mobile">
-    <preview-mobile-types></preview-mobile-types>
-    perview-mobile
+    <preview-mobile-types
+      @changeType="type => mobileType = type"/>
+    <mobile-editor
+      :mobileType="mobileType"/>
   </div>
 </template>
 
 <script>
 import PreviewMobileTypes from './PreviewMobileTypes'
+import MobileEditor from './mobileEditor/MobileEditor'
 
 export default {
   data () {
-    return {}
+    return {
+      mobileType: {}
+    }
   },
-  components: { PreviewMobileTypes }
+  components: { PreviewMobileTypes, MobileEditor }
 }
 </script>
 
