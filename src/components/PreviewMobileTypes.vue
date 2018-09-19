@@ -19,6 +19,11 @@ export default {
       mobileType: {},
     }
   },
+  watch: {
+    mobileType (val) {
+      this.$emit('changeType', val)
+    }
+  },
   created () {
     this.$emit('changeType', this.mobileType = this.mobileTypeList[0])
   }
