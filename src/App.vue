@@ -1,20 +1,20 @@
 <template>
   <div id="app" flex="cross:stretch box:justify">
-    <template-widget/>
-    <preview-mobile/>
+    <layer-select />
+    <preview-mobile />
     <options/>
   </div>
 </template>
 
 <script>
-import TemplateWidget from './components/TemplateWidget'
+import LayerSelect from './components/layer/LayerSelect'
 import PreviewMobile from './components/PreviewMobile'
 import Options from './components/Options'
 
 export default {
   name: 'app',
   components: {
-    TemplateWidget,
+    LayerSelect,
     PreviewMobile,
     Options,
   }

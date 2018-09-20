@@ -1,8 +1,8 @@
 <template>
-  <div id="template-widget">
+  <div id="layer-select">
     <tab v-model="activeMenu">
       <tab-item name="component" label="控件选择">
-        <svg-item name="wenben"></svg-item>
+        <component-select />
       </tab-item>
       <tab-item name="template" label="模板选择">
         <div class="a-c">暂无模板</div>
@@ -12,8 +12,9 @@
 </template>
 
 <script>
-import Tab from './common/tab/Tab'
-import TabItem from './common/tab/TabItem'
+import Tab from '../common/tab/Tab'
+import TabItem from '../common/tab/TabItem'
+import ComponentSelect from './ComponentSelect'
 
 export default {
   data () {
@@ -24,12 +25,13 @@ export default {
   components: {
     Tab,
     TabItem,
+    ComponentSelect,
   }
 }
 </script>
 
 <style lang="scss">
-#template-widget {
+#layer-select {
   width: 280px;
   border-right: 1px solid #ccd5db;
 }

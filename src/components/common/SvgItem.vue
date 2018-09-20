@@ -1,5 +1,5 @@
 <template>
-  <svg class="svg-item" aria-hidden="true">
+  <svg class="svg-item" :style="{ width: size, height: size }" aria-hidden="true">
     <use :xlink:href="`#icon-${name}`"></use>
   </svg>
 </template>
@@ -9,6 +9,7 @@ export default {
   props: {
     name: { type: String, required: true },
     color: { type: String },
+    size: { type: String, default: '1em' },
   }
 }
 </script>
@@ -16,8 +17,6 @@ export default {
 <style>
   .svg-item {
     overflow: hidden;
-    width: 1em;
-    height: 1em;
     vertical-align: -0.15em;
     fill: currentColor;
   }
