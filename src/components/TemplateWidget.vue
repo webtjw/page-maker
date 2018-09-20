@@ -2,7 +2,7 @@
   <div id="template-widget">
     <tab v-model="activeMenu">
       <tab-item name="component" label="控件选择">
-        123
+        <svg-item name="wenben"></svg-item>
       </tab-item>
       <tab-item name="template" label="模板选择">
         <div class="a-c">暂无模板</div>
