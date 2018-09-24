@@ -3,7 +3,16 @@ html, body, #app {
   height: 100%;
 }
 body {
-  font: 15px/1 "Microsoft Yahei";
+  font: 13px/1 "Microsoft Yahei";
+  color: #76838f;
 }
 
 .a-c { text-align: center;}
+
+.inline-block { display: inline-block;}
+
+@for $i from 12 through 20 {
+  .font-#{$i} {
+    font-size: 1px * $i;
+  }
+}
