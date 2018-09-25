@@ -1,6 +1,8 @@
 <template>
   <div class="widgets-select a-c font-12">
-    <div v-for="item of widgets" :key="item.label" class="widget-item inline-block">
+    <div class="widget-item inline-block pointer"
+      v-for="item of widgets" :key="item.name"
+      draggable="true" @dragstart="widgetDragStart($event, item.name)">
       <svg-item :name="item.svg" size="24px" />
       <div>{{item.label}}</div>
     </div>
@@ -12,10 +14,16 @@ export default {
   data () {
     return {
       widgets: [
-        { label: '文本', svg: 'wenben1' },
-        { label: '图片', svg: 'images' },
-        { label: '表单', svg: 'cloud-form' },
+        { name: 'text', label: '文本', svg: 'wenben1' },
+        { name: 'image', label: '图片', svg: 'images' },
+        { name: 'form', label: '表单', svg: 'cloud-form' },
       ]
+    }
+  },
+  methods: {
+    widgetDragStart (e, type) {
+      e.dataTransfer.setData('text/plain', type)
+      e.dataTransfer.dropEffect = 'copy'
     }
   }
 }

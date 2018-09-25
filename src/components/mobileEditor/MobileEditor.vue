@@ -1,9 +1,11 @@
 <template>
   <div class="mobile-editor">
-    <div class="mock-mobile" ref="mockMobile" :style="{
+    <div class="mock-mobile" :style="{
       width: `${editorSize.width}px`,
       height: `${editorSize.height}px`,
-    }">
+    }"
+    ref="mockMobile"
+    @dragover.prevent="overWidget" @drop.prevent="dropWidget">
     </div>
   </div>
 </template>
@@ -29,9 +31,18 @@ export default {
         : { width: parseInt(maxHeight / height * width, 10), height: maxHeight }
     }
   },
+  methods: {
+    overWidget (e) {
+      e.dataTransfer.dropEffect = 'move'
+    },
+    dropWidget (e) {
+      const widgetType = e.dataTransfer.getData('text/plain')
+      console.log(widgetType)
+    }
+  },
   mounted () {
     const rect = this.$refs.mockMobile.getBoundingClientRect()
-    console.log(this.maxHeight = parseInt((docHeight - rect.top) * maxScale, 10))
+    this.maxHeight = parseInt((docHeight - rect.top) * maxScale, 10)
   }
 }
 </script>

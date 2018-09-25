@@ -4,7 +4,8 @@ html, body, #app {
 }
 body {
   font: 13px/1 "Microsoft Yahei";
-  color: #76838f;
+  // color: #76838f;
+  color: #333;
 }
 
 .a-c { text-align: center;}
@@ -16,3 +17,5 @@ body {
     font-size: 1px * $i;
   }
 }
+
+.pointer { cursor: pointer;}
