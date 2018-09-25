@@ -32,8 +32,11 @@ export default {
 <style lang="scss">
 .widgets-select {
   .widget-item {
-    margin: 0 4px;
-    padding: 10px;
+    padding: 10px 20px;
+    &:hover {
+      background-color: #1593ff;
+      color: #fff;
+    }
 
     div {
       padding-top: 6px;

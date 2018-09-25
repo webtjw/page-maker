@@ -49,9 +49,6 @@ export default {
       return childElements
     }
   },
-  mounted () {
-    console.log(this)
-  },
   render (createElement) {
     return createElement('div',
       { class: 'el-tab' },
