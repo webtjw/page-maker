@@ -1,6 +1,6 @@
 <template>
-  <div class="mobile-editor">
-    <div class="mock-mobile relative" :style="{ width: `${editorSize.width}px`, height: `${editorSize.height}px` }"
+  <div class="mobile-editor a-c">
+    <div class="mock-mobile inline-block relative" :style="{ width: `${editorSize.width}px`, height: `${editorSize.height}px` }"
       ref="mockMobile"
       @dragover.prevent="overWidget" @drop.prevent="dropWidget">
       <movable v-for="item of widgets" :key="item.uid" :data="item">
@@ -32,6 +32,11 @@ export default {
   computed: {
     editorSize () {
       const { maxHeight, mobileType, mobileType: { width, height } } = this
+      this.$nextTick(() => {
+        const rect = this.$refs.mockMobile.getBoundingClientRect()
+        eidtorPosition[0] = parseInt(rect.top, 10)
+        eidtorPosition[1] = parseInt(rect.left, 10)
+      })
       return height <= maxHeight
         ? mobileType
         : { width: parseInt(maxHeight / height * width, 10), height: maxHeight }
@@ -43,15 +48,16 @@ export default {
     },
     dropWidget (e) {
       const widgetType = e.dataTransfer.getData('text/plain')
-      this.appendWidget(widgetType, e.x, e.y)
+      this.appendWidget(widgetType, e.y, e.x)
     },
-    appendWidget (type, x, y) {
+    appendWidget (type, top, left) {
       switch (type) {
         case 'text':
           this.widgets.push({
             uid: appendId,
-            position: { top: x - eidtorPosition[0], left: y - eidtorPosition[1] }
+            position: { top: top - eidtorPosition[0], left: left - eidtorPosition[1] }
           })
+          console.log([top, left], eidtorPosition)
           appendId++
           break
         default:
@@ -61,8 +67,6 @@ export default {
   },
   mounted () {
     const rect = this.$refs.mockMobile.getBoundingClientRect()
-    eidtorPosition[0] = rect.top
-    eidtorPosition[1] = rect.left
     this.maxHeight = parseInt((docHeight - rect.top) * maxScale, 10)
   },
   components: {
@@ -76,7 +80,6 @@ export default {
   margin: 40px 0 0;
 
   .mock-mobile {
-    margin: 0 auto;
     border: 1px dashed #999;
     box-shadow: 0 0 20px 4px #eee;
   }
