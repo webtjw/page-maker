@@ -8,10 +8,6 @@ body {
   color: #333;
 }
 
-.a-c { text-align: center;}
-
-.inline-block { display: inline-block;}
-
 @for $i from 12 through 20 {
   .font-#{$i} {
     font-size: 1px * $i;
@@ -19,3 +15,9 @@ body {
 }
 
 .pointer { cursor: pointer;}
+
+.a-c { text-align: center;}
+
+.inline-block { display: inline-block;}
+
+.relative { position: relative;}.absolute { position: absolute;}

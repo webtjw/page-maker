@@ -1,9 +1,9 @@
 <template>
   <div class="mobile-editor">
-    <div class="mock-mobile" :style="{ width: `${editorSize.width}px`, height: `${editorSize.height}px` }"
+    <div class="mock-mobile relative" :style="{ width: `${editorSize.width}px`, height: `${editorSize.height}px` }"
       ref="mockMobile"
       @dragover.prevent="overWidget" @drop.prevent="dropWidget">
-      <movable v-for="item of widgets" :key="item.uid">
+      <movable v-for="item of widgets" :key="item.uid" :data="item">
         {{item.uid}}
         {{item.position}}
       </movable>
