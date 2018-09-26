@@ -16,7 +16,7 @@ import Movable from './widgets/Movable'
 
 const docHeight = document.documentElement.clientHeight
 const maxScale = 0.9
-let appendId = 0 // 用于记录添加的控件的 id
+let widgetId = 0 // 用于记录添加的控件的 id
 const eidtorPosition = []
 
 export default {
@@ -49,22 +49,23 @@ export default {
       e.dataTransfer.dropEffect = 'move'
     },
     dropWidget (e) {
+      const { editorSize } = this
+      const rect = this.$refs.mockMobile.getBoundingClientRect() // 浏览器窗口宽高可能会改变，因此在触发后实时获取，对性能影响很小，不缓存也没问题
+      const mobileLeft = rect.left
+      const mobileTop = rect.top
+      const widgetLeft = ((e.x - mobileLeft) / editorSize.width * 100).toFixed(2) // 用百分比来适配
+      const widgetTop = ((e.y - mobileTop) / editorSize.height * 100).toFixed(2)
+      const widgetWidth = 100 - widgetLeft // 高度应根据内容自适应
+      // 根据类型生成编辑控件
       const widgetType = e.dataTransfer.getData('text/plain')
-      this.appendWidget(widgetType, e.y, e.x)
-    },
-    appendWidget (type, top, left) {
-      const editorWidth = this.editorSize.width
-      const editorHeight = this.editorSize.height
-      const percentageY = ((top - eidtorPosition[0]) / editorHeight * 100).toFixed(2)
-      const percentageX = ((left - eidtorPosition[1]) / editorWidth * 100).toFixed(2)
-      switch (type) {
+      switch (widgetType) {
         case 'text':
           this.widgets.push({
-            uid: appendId,
-            position: { top: percentageY, left: percentageX },
-            width: 100 - percentageX
+            uid: widgetId,
+            position: { top: widgetTop, left: widgetLeft },
+            width: widgetWidth
           })
-          appendId++
+          widgetId++
           break
         default:
           break
