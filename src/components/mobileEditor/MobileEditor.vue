@@ -1,6 +1,6 @@
 <template>
   <div class="mobile-editor a-c">
-    <div class="mock-mobile inline-block relative" :style="{ width: `${editorSize.width}px`, height: `${editorSize.height}px` }"
+    <div class="mock-mobile inline-block relative bg-fff" :style="{ width: `${editorSize.width}px`, height: `${editorSize.height}px` }"
       ref="mockMobile"
       @dragover.prevent="overWidget" @drop.prevent="dropWidget">
       <movable v-for="item of widgets" :key="item.uid" :data="item">
@@ -26,20 +26,22 @@ export default {
   data () {
     return {
       maxHeight: (docHeight - 68) * maxScale,
-      widgets: []
+      widgets: [],
+      editorSize: { width: 0, height: 0 }
     }
   },
-  computed: {
-    editorSize () {
-      const { maxHeight, mobileType, mobileType: { width, height } } = this
+  watch: {
+    mobileType (value) {
+      const { width, height } = value
+      const { maxHeight } = this
+      this.editorSize = height <= maxHeight
+        ? value
+        : { width: parseInt(maxHeight / height * width, 10), height: maxHeight }
       this.$nextTick(() => {
         const rect = this.$refs.mockMobile.getBoundingClientRect()
         eidtorPosition[0] = parseInt(rect.top, 10)
         eidtorPosition[1] = parseInt(rect.left, 10)
       })
-      return height <= maxHeight
-        ? mobileType
-        : { width: parseInt(maxHeight / height * width, 10), height: maxHeight }
     }
   },
   methods: {
@@ -51,13 +53,15 @@ export default {
       this.appendWidget(widgetType, e.y, e.x)
     },
     appendWidget (type, top, left) {
+      const positionX = left - eidtorPosition[1]
+      const editorWidth = this.editorSize.width
       switch (type) {
         case 'text':
           this.widgets.push({
             uid: appendId,
-            position: { top: top - eidtorPosition[0], left: left - eidtorPosition[1] }
+            position: { top: top - eidtorPosition[0], left: positionX },
+            width: ((editorWidth - positionX) / editorWidth * 100).toFixed(2)
           })
-          console.log([top, left], eidtorPosition)
           appendId++
           break
         default:
@@ -82,6 +86,7 @@ export default {
   .mock-mobile {
     border: 1px dashed #999;
     box-shadow: 0 0 20px 4px #eee;
+    text-align: left;
   }
 }
 </style>

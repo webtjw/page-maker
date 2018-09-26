@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <top-panel />
-    <div flex="cross:stretch box:justify">
+    <div flex="cross:stretch box:justify" style="height: calc(100% - 61px);">
       <layer-select />
       <preview-mobile />
       <options/>

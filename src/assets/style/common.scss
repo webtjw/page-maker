@@ -5,7 +5,7 @@ html, body, #app {
 body {
   font: 13px/1 "Microsoft Yahei";
   // color: #76838f;
-  color: #333;
+  color: #555;
 }
 
 @for $i from 12 through 20 {
@@ -21,3 +21,7 @@ body {
 .inline-block { display: inline-block;}
 
 .relative { position: relative;}.absolute { position: absolute;}
+
+.bg-fa { background-color: #fafafa;}
+.bg-eee { background-color: #eee;}
+.bg-fff { background-color: #fff;}

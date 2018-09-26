@@ -1,6 +1,6 @@
 <template>
-  <div class="widgets-select a-c font-12">
-    <div class="widget-item inline-block pointer"
+  <div class="widgets-select font-12" flex="main:center">
+    <div class="widget-item pointer" flex="dir:top main:center cross:center"
       v-for="item of widgets" :key="item.name"
       draggable="true" @dragstart="widgetDragStart($event, item.name)">
       <svg-item :name="item.svg" size="24px" />
@@ -31,15 +31,18 @@ export default {
 
 <style lang="scss">
 .widgets-select {
+  height: 100%;
+
   .widget-item {
-    padding: 10px 20px;
+    height: 100%;
+    padding: 0 20px;
     &:hover {
       background-color: #1593ff;
       color: #fff;
     }
 
     div {
-      padding-top: 6px;
+      padding-top: 4px;
       line-height: 1;
     }
   }

@@ -1,5 +1,5 @@
 <template>
-  <div id="perview-mobile">
+  <div id="perview-mobile" class="bg-fa">
     <preview-mobile-types
       @changeType="type => mobileType = type"/>
     <mobile-editor

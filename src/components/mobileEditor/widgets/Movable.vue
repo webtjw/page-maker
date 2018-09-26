@@ -1,5 +1,5 @@
 <template>
-  <div class="widget-movable absolute" :style="{ top: `${position.top}px`, left: `${position.left}px` }">
+  <div class="widget-movable absolute" :style="{ top: `${data.position.top}px`, left: `${data.position.left}px`, width: `${data.width}%` }">
     <slot />
   </div>
 </template>
@@ -8,19 +8,6 @@
 export default {
   props: {
     data: { type: Object, required: true }
-  },
-  computed: {
-    position () {
-      const { data } = this
-      let top = 0
-      let left = 0
-      if (data && data.position) {
-        top = data.position.top
-        left = data.position.left
-      }
-
-      return { left, top }
-    }
   }
 }
 </script>
