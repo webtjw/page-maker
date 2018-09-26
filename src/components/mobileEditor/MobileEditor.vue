@@ -53,14 +53,16 @@ export default {
       this.appendWidget(widgetType, e.y, e.x)
     },
     appendWidget (type, top, left) {
-      const positionX = left - eidtorPosition[1]
       const editorWidth = this.editorSize.width
+      const editorHeight = this.editorSize.height
+      const percentageY = ((top - eidtorPosition[0]) / editorHeight * 100).toFixed(2)
+      const percentageX = ((left - eidtorPosition[1]) / editorWidth * 100).toFixed(2)
       switch (type) {
         case 'text':
           this.widgets.push({
             uid: appendId,
-            position: { top: top - eidtorPosition[0], left: positionX },
-            width: ((editorWidth - positionX) / editorWidth * 100).toFixed(2)
+            position: { top: percentageY, left: percentageX },
+            width: 100 - percentageX
           })
           appendId++
           break

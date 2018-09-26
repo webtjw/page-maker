@@ -1,5 +1,5 @@
 <template>
-  <div class="widget-movable absolute" :style="{ top: `${data.position.top}px`, left: `${data.position.left}px`, width: `${data.width}%` }">
+  <div class="widget-movable absolute" :style="{ top: `${data.position.top}%`, left: `${data.position.left}%`, width: `${data.width}%` }">
     <slot />
   </div>
 </template>
