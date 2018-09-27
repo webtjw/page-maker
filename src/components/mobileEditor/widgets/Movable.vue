@@ -4,8 +4,7 @@
       left: `${data.position.left}%`,
       width: `${data.width}%` }"
     :tabindex="data.uid"
-    @mousedown="() => canMove = true"
-    @mouseup="readyToMove">
+    @mousedown="enableMovable">
     <div class="resize-left"></div>
     <div class="resize-right"></div>
     <slot />
@@ -14,17 +13,20 @@
 
 <script>
 export default {
+  isMoving: false, // 与视图无关的状态，不放在 data 中，节省开销
   props: {
-    data: { type: Object, required: true }
-  },
-  data () {
-    return {
-      canMove: false
-    }
+    data: { type: Object, required: true },
+    index: { type: Number, required: true },
   },
   methods: {
-    readyToMove (e) {
-      console.log('up', e)
+    enableMovable (e) {
+      this.isMoving = true
+      this.$emit('enableMovable', {
+        uid: this.data.uid,
+        index: this.index,
+        x: e.x,
+        y: e.y
+      })
     }
   }
 }

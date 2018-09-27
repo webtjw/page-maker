@@ -2,8 +2,9 @@
   <div class="mobile-editor a-c">
     <div class="mock-mobile inline-block relative bg-fff" :style="{ width: `${editorSize.width}px`, height: `${editorSize.height}px` }"
       ref="mockMobile"
-      @dragover.prevent="overWidget" @drop.prevent="dropWidget">
-      <movable v-for="item of widgets" :key="item.uid" :data="item">
+      @dragover.prevent="overWidget" @drop.prevent="dropWidget"
+      @mousemove="moveSelectedWidget">
+      <movable v-for="(item, index) of widgets" :key="item.uid" :data="item" :index="index" @enableMovable="markMovable">
         {{item.uid}}
         {{item.position}}
       </movable>
@@ -27,7 +28,10 @@ export default {
     return {
       maxHeight: (docHeight - 68) * maxScale,
       widgets: [],
-      editorSize: { width: 0, height: 0 }
+      editorSize: { width: 0, height: 0 },
+      movingWidget: null,
+      originPosition: { touchX: 0, touchY: 0, widgetX: 0, widgetY: 0 },
+      movePosition: { x: 0, y: 0 }
     }
   },
   watch: {
@@ -49,32 +53,62 @@ export default {
       e.dataTransfer.dropEffect = 'move'
     },
     dropWidget (e) {
-      const { editorSize } = this
-      const rect = this.$refs.mockMobile.getBoundingClientRect() // 浏览器窗口宽高可能会改变，因此在触发后实时获取，对性能影响很小，不缓存也没问题
-      const mobileLeft = rect.left
-      const mobileTop = rect.top
-      const widgetLeft = ((e.x - mobileLeft) / editorSize.width * 100).toFixed(2) // 用百分比来适配
-      const widgetTop = ((e.y - mobileTop) / editorSize.height * 100).toFixed(2)
-      const widgetWidth = 100 - widgetLeft // 高度应根据内容自适应
+      const { left, top } = this.getRelativePostion(e.x, e.y)
       // 根据类型生成编辑控件
       const widgetType = e.dataTransfer.getData('text/plain')
       switch (widgetType) {
         case 'text':
           this.widgets.push({
             uid: widgetId,
-            position: { top: widgetTop, left: widgetLeft },
-            width: widgetWidth
+            position: { top, left },
+            width: 100 - left
           })
           widgetId++
           break
         default:
           break
       }
+    },
+    markMovable ({ index, x, y }) {
+      const item = this.movingWidget = this.widgets[index]
+      this.originPosition.touchX = x
+      this.originPosition.touchY = y
+      this.originPosition.widgetX = item.position.left
+      this.originPosition.widgetY = item.position.top
+    },
+    unMarkMovable () {
+      if (this.movingWidget) this.movingWidget = null
+    },
+    moveSelectedWidget (e) {
+      if (this.movingWidget) {
+        const { originPosition, movePosition, editorSize } = this
+        const offsetX = +((e.x - originPosition.touchX) / editorSize.width * 100).toFixed(2)
+        const offsetY = +((e.y - originPosition.touchY) / editorSize.height * 100).toFixed(2)
+        movePosition.x = +(offsetX + originPosition.widgetX).toFixed(2)
+        movePosition.y = +(offsetY + originPosition.widgetY).toFixed(2)
+        requestAnimationFrame(this.updateWidgetPosition)
+      }
+    },
+    updateWidgetPosition () {
+      const { x, y } = this.movePosition
+      this.movingWidget.position.top = y
+      this.movingWidget.position.left = x
+    },
+    getRelativePostion (x, y) {
+      const { editorSize } = this
+      const rect = this.$refs.mockMobile.getBoundingClientRect() // 浏览器窗口宽高可能会改变，因此在触发后实时获取，对性能影响很小，不缓存也没问题
+      const mobileLeft = rect.left
+      const mobileTop = rect.top
+      const widgetLeft = +((x - mobileLeft) / editorSize.width * 100).toFixed(2) // 用百分比来适配
+      const widgetTop = +((y - mobileTop) / editorSize.height * 100).toFixed(2)
+      return { left: widgetLeft, top: widgetTop }
     }
   },
   mounted () {
     const rect = this.$refs.mockMobile.getBoundingClientRect()
     this.maxHeight = parseInt((docHeight - rect.top) * maxScale, 10)
+    // 取消标记移动组件
+    document.body.addEventListener('mouseup', () => this.unMarkMovable())
   },
   components: {
     Movable
