@@ -5,7 +5,7 @@
       width: `${data.width}%` }"
     :tabindex="data.uid"
     @mousedown="enableMovable">
-    <div class="resize-left"></div>
+    <div class="resize-left" @mousedown.stop=""></div>
     <div class="resize-right"></div>
     <slot />
   </div>

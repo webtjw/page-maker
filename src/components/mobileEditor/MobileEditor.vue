@@ -1,10 +1,9 @@
 <template>
-  <div class="mobile-editor a-c">
+  <div class="mobile-editor a-c o-h" @mousemove="moveSelectedWidget">
     <div class="mock-mobile inline-block relative bg-fff" :style="{ width: `${editorSize.width}px`, height: `${editorSize.height}px` }"
       ref="mockMobile"
-      @dragover.prevent="overWidget" @drop.prevent="dropWidget"
-      @mousemove="moveSelectedWidget">
-      <movable v-for="(item, index) of widgets" :key="item.uid" :data="item" :index="index" @enableMovable="markMovable">
+      @dragover.prevent="overWidget" @drop.prevent="dropWidget">
+      <movable v-for="(item, index) of widgets" :key="item.uid" :ref="`movable-${item.uid}`" :data="item" :index="index" @enableMovable="markMovable">
         {{item.uid}}
         {{item.position}}
       </movable>
@@ -63,11 +62,16 @@ export default {
             position: { top, left },
             width: 100 - left
           })
-          widgetId++
           break
         default:
           break
       }
+      // 选中新增项
+      const widgetKey = `movable-${widgetId}`
+      this.$nextTick(() => {
+        this.$refs[widgetKey][0].$el.focus()
+      })
+      widgetId++
     },
     markMovable ({ index, x, y }) {
       const item = this.movingWidget = this.widgets[index]
@@ -81,18 +85,29 @@ export default {
     },
     moveSelectedWidget (e) {
       if (this.movingWidget) {
-        const { originPosition, movePosition, editorSize } = this
+        const { originPosition, movePosition, editorSize, movingWidget } = this
         const offsetX = +((e.x - originPosition.touchX) / editorSize.width * 100).toFixed(2)
         const offsetY = +((e.y - originPosition.touchY) / editorSize.height * 100).toFixed(2)
-        movePosition.x = +(offsetX + originPosition.widgetX).toFixed(2)
-        movePosition.y = +(offsetY + originPosition.widgetY).toFixed(2)
+        const finalX = +(offsetX + originPosition.widgetX).toFixed(2)
+        // 横坐标限制
+        const maxLeft = 100 - movingWidget.width
+        movePosition.x = finalX < 0
+          ? 0
+          : finalX > maxLeft
+            ? maxLeft
+            : finalX
+        // 纵坐标限制
+        const finalY = +(offsetY + originPosition.widgetY).toFixed(2)
+        movePosition.y = finalY < 0 ? 0 : finalY
         requestAnimationFrame(this.updateWidgetPosition)
       }
     },
     updateWidgetPosition () {
       const { x, y } = this.movePosition
-      this.movingWidget.position.top = y
-      this.movingWidget.position.left = x
+      if (this.movingWidget) {
+        this.movingWidget.position.top = y
+        this.movingWidget.position.left = x
+      }
     },
     getRelativePostion (x, y) {
       const { editorSize } = this
