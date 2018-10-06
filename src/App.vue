@@ -4,7 +4,7 @@
     <div flex="cross:stretch box:justify" style="height: calc(100% - 61px);">
       <layer-select />
       <preview-mobile />
-      <options/>
+      <widget-panel/>
     </div>
   </div>
 </template>
@@ -13,7 +13,7 @@
 import TopPanel from './components/TopPanel'
 import LayerSelect from './components/layer/LayerSelect'
 import PreviewMobile from './components/PreviewMobile'
-import Options from './components/Options'
+import WidgetPanel from './components/WidgetPanel'
 
 export default {
   name: 'app',
@@ -21,7 +21,7 @@ export default {
     LayerSelect,
     PreviewMobile,
     TopPanel,
-    Options,
+    WidgetPanel,
   }
 }
 </script>

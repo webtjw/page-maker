@@ -32,7 +32,7 @@ export default {
 
 <style lang="scss">
 #layer-select {
-  width: 280px;
+  width: 200px;
   border-right: 1px solid #ccd5db;
 }
 </style>

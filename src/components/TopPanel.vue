@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import WidgetsSelect from './WidgetsSelect'
+import WidgetsSelect from './widgets/WidgetsSelect'
 
 export default {
   components: { WidgetsSelect }

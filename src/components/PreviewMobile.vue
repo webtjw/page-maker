@@ -8,8 +8,8 @@
 </template>
 
 <script>
-import PreviewMobileTypes from './PreviewMobileTypes'
-import MobileEditor from './mobileEditor/MobileEditor'
+import PreviewMobileTypes from './mobile/PreviewMobileTypes'
+import MobileEditor from './mobile/editor/MobileEditor'
 
 export default {
   data () {
@@ -20,8 +20,3 @@ export default {
   components: { PreviewMobileTypes, MobileEditor }
 }
 </script>
-
-<style lang="scss">
-#perview-mobile {
-}
-</style>
