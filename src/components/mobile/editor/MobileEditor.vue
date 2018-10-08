@@ -3,8 +3,9 @@
     <div class="mock-mobile inline-block relative bg-fff" :style="{ width: `${editorSize.width}px`, height: `${editorSize.height}px` }"
       ref="mockMobile"
       @dragover.prevent="overWidget" @drop.prevent="dropWidget">
-      <movable v-for="(item, index) of widgets" :key="item.uid" :ref="`movable-${item.uid}`" :data="item" :index="index" @enableMovable="markMovable">
+      <movable v-for="item of widgets" :key="item.uid" :ref="`movable-${item.uid}`" :data="item" @enableMovable="markMovable">
         {{item.uid}}
+        {{item.type}}
         {{item.position}}
       </movable>
     </div>
@@ -13,6 +14,7 @@
 
 <script>
 import Movable from './widgets/Movable'
+import store from '@/store'
 
 const docHeight = document.documentElement.clientHeight
 const maxScale = 0.9
@@ -26,11 +28,18 @@ export default {
   data () {
     return {
       maxHeight: (docHeight - 68) * maxScale,
-      widgets: [],
       editorSize: { width: 0, height: 0 },
-      movingWidget: null,
       originPosition: { touchX: 0, touchY: 0, widgetX: 0, widgetY: 0 },
-      movePosition: { x: 0, y: 0 }
+      movePosition: { x: 0, y: 0 },
+      shouldMove: false // 标记当前选中控件是否应该跟随鼠标移动
+    }
+  },
+  computed: {
+    widgets () {
+      return store.state.widgets
+    },
+    selectedWidget () {
+      return store.state.selectedWidget
     }
   },
   watch: {
@@ -59,6 +68,7 @@ export default {
         case 'text':
           this.widgets.push({
             uid: widgetId,
+            type: widgetType,
             position: { top, left },
             width: 100 - left
           })
@@ -67,30 +77,28 @@ export default {
           break
       }
       // 选中新增项
-      const widgetKey = `movable-${widgetId}`
-      this.$nextTick(() => {
-        this.$refs[widgetKey][0].$el.focus()
-      })
+      store.commit('selectWidget', this.widgets[this.widgets.length - 1])
       widgetId++
     },
-    markMovable ({ index, x, y }) {
-      const item = this.movingWidget = this.widgets[index]
+    markMovable ({ x, y }) {
+      const item = this.selectedWidget
+      this.shouldMove = true // 标记当前选中控件应该跟随鼠标移动
       this.originPosition.touchX = x
       this.originPosition.touchY = y
       this.originPosition.widgetX = item.position.left
       this.originPosition.widgetY = item.position.top
     },
     unMarkMovable () {
-      if (this.movingWidget) this.movingWidget = null
+      this.shouldMove = false
     },
     moveSelectedWidget (e) {
-      if (this.movingWidget) {
-        const { originPosition, movePosition, editorSize, movingWidget } = this
+      if (this.shouldMove) {
+        const { originPosition, movePosition, editorSize, selectedWidget } = this
         const offsetX = +((e.x - originPosition.touchX) / editorSize.width * 100).toFixed(2)
         const offsetY = +((e.y - originPosition.touchY) / editorSize.height * 100).toFixed(2)
         const finalX = +(offsetX + originPosition.widgetX).toFixed(2)
         // 横坐标限制
-        const maxLeft = 100 - movingWidget.width
+        const maxLeft = 100 - selectedWidget.width
         movePosition.x = finalX < 0
           ? 0
           : finalX > maxLeft
@@ -104,9 +112,9 @@ export default {
     },
     updateWidgetPosition () {
       const { x, y } = this.movePosition
-      if (this.movingWidget) {
-        this.movingWidget.position.top = y
-        this.movingWidget.position.left = x
+      if (this.shouldMove) {
+        this.selectedWidget.position.top = y
+        this.selectedWidget.position.left = x
       }
     },
     getRelativePostion (x, y) {
@@ -122,8 +130,8 @@ export default {
   mounted () {
     const rect = this.$refs.mockMobile.getBoundingClientRect()
     this.maxHeight = parseInt((docHeight - rect.top) * maxScale, 10)
-    // 取消标记移动组件
-    document.body.addEventListener('mouseup', () => this.unMarkMovable())
+    // 取消标记控件可移动
+    document.body.addEventListener('mouseup', this.unMarkMovable)
   },
   components: {
     Movable

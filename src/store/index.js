@@ -5,10 +5,12 @@ Vue.use(vuex)
 
 const store = new vuex.Store({
   state: {
-    widgets: []
+    widgets: [],
+    selectedWidget: null
   },
   mutations: {
-    updateWidget (state, payload) {
+    selectWidget (state, widget) {
+      state.selectedWidget = widget
     }
   }
 })

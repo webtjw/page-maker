@@ -1,9 +1,9 @@
 <template>
   <div class="widget-movable absolute move"
+    :class="{selected: selectedWidget === data}"
     :style="{ top: `${data.position.top}%`,
       left: `${data.position.left}%`,
       width: `${data.width}%` }"
-    :tabindex="data.uid"
     @mousedown="enableMovable">
     <div class="resize-left" @mousedown.stop=""></div>
     <div class="resize-right"></div>
@@ -12,18 +12,23 @@
 </template>
 
 <script>
+import store from '@/store'
+
 export default {
   isMoving: false, // 与视图无关的状态，不放在 data 中，节省开销
   props: {
     data: { type: Object, required: true },
-    index: { type: Number, required: true },
+  },
+  computed: {
+    selectedWidget () {
+      return store.state.selectedWidget
+    }
   },
   methods: {
     enableMovable (e) {
       this.isMoving = true
+      store.commit('selectWidget', this.data)
       this.$emit('enableMovable', {
-        uid: this.data.uid,
-        index: this.index,
         x: e.x,
         y: e.y
       })
@@ -37,7 +42,7 @@ export default {
   padding: 4px 5px;
   border: 1px solid transparent;
   outline: 0;
-  &:focus {
+  &.selected {
     border: 1px solid #08a1ef;
     .resize-left, .resize-right {
       display: block;
