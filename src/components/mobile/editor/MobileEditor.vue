@@ -4,9 +4,7 @@
       ref="mockMobile"
       @dragover.prevent="overWidget" @drop.prevent="dropWidget">
       <movable v-for="item of widgets" :key="item.uid" :ref="`movable-${item.uid}`" :data="item" @enableMovable="markMovable">
-        {{item.uid}}
-        {{item.type}}
-        {{item.position}}
+        {{item.content}}
       </movable>
     </div>
   </div>
@@ -70,7 +68,8 @@ export default {
             uid: widgetId,
             type: widgetType,
             position: { top, left },
-            width: 100 - left
+            width: 100 - left,
+            content: '请输入文本内容'
           })
           break
         default:
